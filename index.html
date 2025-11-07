@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atomberg Remote Controller</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gradient-to-br from-remote-bg to-gray-900 min-h-screen flex items-center justify-center p-4">
+    <!-- Remote Controller Container -->
+    <div class="bg-remote-panel rounded-3xl shadow-remote p-8 w-full max-w-sm">
+        
+        <!-- Header Display -->
+        <div class="bg-black rounded-2xl p-4 mb-6 border border-gray-700">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center space-x-2">
+                    <div class="led-indicator w-3 h-3 bg-remote-accent rounded-full"></div>
+                    <span class="text-green-400 font-mono text-sm">ATOMBERG</span>
+                </div>
+                <button id="refresh-btn" class="text-gray-400 hover:text-white transition-colors">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <polyline points="1 20 1 14 7 14"></polyline>
+                        <path d="m3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="text-green-400 font-mono text-xs">
+                <div id="device-count" class="mb-1">0 devices found</div>
+                <select id="device-select" class="w-full bg-gray-800 border border-gray-600 text-green-400 text-xs rounded px-2 py-1 font-mono">
+                    <option value="">Searching for devices...</option>
+                </select>
+            </div>
+            <div id="device-info" class="hidden mt-2 text-green-400 font-mono text-xs leading-relaxed"></div>
+        </div>
+
+        <!-- Integrated Power/Speed Controls -->
+        <div id="fan-control-section" class="mb-6 hidden">
+            <div class="text-remote-text text-sm font-medium mb-4 text-center">Fan Control</div>
+            <div class="flex justify-center">
+                <div class="speed-dial-container relative w-48 h-48 mx-auto">
+                    <!-- Outer Ring with Professional Styling -->
+                    <div class="absolute inset-0 rounded-full bg-gradient-to-br from-gray-800 via-gray-700 to-gray-900 shadow-2xl"></div>
+                    <div class="absolute inset-1 rounded-full bg-gradient-to-tr from-gray-900 via-gray-800 to-gray-700"></div>
+                    
+                    <!-- Inner Display/Power Circle - Clickable -->
+                    <button id="power-center" class="absolute inset-12 rounded-full bg-gradient-to-br from-black via-gray-900 to-black border border-gray-600 flex items-center justify-center shadow-inner transition-all duration-300 hover:shadow-lg hover:border-remote-accent cursor-pointer">
+                        <div class="text-center">
+                            <!-- Power Off State (Default) -->
+                            <div id="power-off-state" class="power-state">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-gray-500 mb-1">
+                                    <path d="M12 2v10"></path>
+                                    <path d="M18.4 6.6a9 9 0 1 1-12.77.04"></path>
+                                </svg>
+                                <div class="text-xs text-gray-400 font-mono tracking-wider">POWER</div>
+                            </div>
+                            
+                            <!-- Speed Display State (Hidden by default) -->
+                            <div id="speed-display-state" class="power-state hidden">
+                                <div class="text-3xl font-mono font-bold text-remote-accent mb-1" id="current-speed">1</div>
+                                <div class="text-xs text-gray-400 font-mono tracking-wider">SPEED</div>
+                            </div>
+                        </div>
+                    </button>
+                    
+                    <button class="speed-button absolute w-8 h-8 rounded-full font-bold text-base flex items-center justify-center" 
+                            data-speed="1" style="top: 8px; left: 80px;">1</button>
+                    
+                    <button class="speed-button absolute w-8 h-8 rounded-full font-bold text-base flex items-center justify-center" 
+                            data-speed="2" style="top: 42px; left: 138px;">2</button>
+                    
+                    <button class="speed-button absolute w-8 h-8 rounded-full font-bold text-base flex items-center justify-center" 
+                            data-speed="3" style="top: 112px; left: 138px;">3</button>
+                    
+                    <button class="speed-button absolute w-8 h-8 rounded-full font-bold text-base flex items-center justify-center" 
+                            data-speed="4" style="top: 150px; left: 80px;">4</button>
+                    
+                    <button class="speed-button absolute w-8 h-8 rounded-full font-bold text-base flex items-center justify-center" 
+                            data-speed="5" style="top: 112px; left: 22px;">5</button>
+                    
+                    <button class="speed-button absolute w-8 h-8 rounded-full font-bold text-base flex items-center justify-center" 
+                            data-speed="6" style="top: 42px; left: 22px;">6</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sleep Mode -->
+        <div id="sleep-control-section" class="grid grid-cols-2 gap-4 mb-6 hidden">
+            <button id="sleep-on" class="remote-button text-remote-text py-3 px-4 rounded-xl flex items-center justify-center space-x-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <span class="text-sm">Sleep</span>
+            </button>
+            <button id="sleep-off" class="remote-button text-remote-text py-3 px-4 rounded-xl flex items-center justify-center space-x-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <span class="text-sm">Wake</span>
+            </button>
+        </div>
+
+        <!-- Timer Controls -->
+                <!-- Timer Control -->
+        <div id="timer-control-section" class="mb-6 hidden">
+            <div class="bg-remote-dark rounded-lg p-3 mb-4 text-center">
+                <div class="text-xs text-gray-400 mb-1">TIMER</div>
+                <div id="timer-display" class="text-lg font-mono text-remote-text">00:00</div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 mb-3">
+                <button id="timer-1h" class="remote-button text-remote-text py-2 px-3 rounded-lg text-sm">1H</button>
+                <button id="timer-2h" class="remote-button text-remote-text py-2 px-3 rounded-lg text-sm">2H</button>
+                <button id="timer-4h" class="remote-button text-remote-text py-2 px-3 rounded-lg text-sm">4H</button>
+                <button id="timer-8h" class="remote-button text-remote-text py-2 px-3 rounded-lg text-sm">8H</button>
+            </div>
+            <button id="timer-off" class="w-full remote-button text-red-400 py-2 px-4 rounded-lg text-sm">Timer Off</button>
+        </div>
+
+        <!-- Light Controls -->
+                <!-- Light Control -->
+        <div id="light-control-section" class="grid grid-cols-2 gap-4 mb-6 hidden">
+            <button id="light-on" class="remote-button text-yellow-400 py-3 px-4 rounded-xl flex items-center justify-center space-x-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <span class="text-sm">Light</span>
+            </button>
+            <button id="light-off" class="remote-button text-gray-400 py-3 px-4 rounded-xl flex items-center justify-center space-x-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <path d="M12 17h.01"></path>
+                    <path d="M3 3l18 18"></path>
+                </svg>
+                <span class="text-sm">Off</span>
+            </button>
+        </div>
+
+        <!-- Brightness Controls (for supported models) -->
+        <div id="brightness-section" class="mb-6 hidden">
+            <div class="text-center text-xs text-gray-400 mb-3">BRIGHTNESS</div>
+            <div class="flex items-center justify-center space-x-3 mb-3">
+                <button id="brightness-decrease" class="w-10 h-10 remote-button text-yellow-400 rounded-full flex items-center justify-center text-lg">-</button>
+                <div class="flex-1 px-3">
+                    <input type="range" id="brightness-slider" min="10" max="100" value="50" 
+                           class="w-full h-2 bg-remote-dark rounded-lg appearance-none cursor-pointer slider">
+                </div>
+                <button id="brightness-increase" class="w-10 h-10 remote-button text-yellow-400 rounded-full flex items-center justify-center text-lg">+</button>
+            </div>
+            <div class="text-center">
+                <span id="brightness-value" class="text-sm text-gray-400 font-mono">50%</span>
+            </div>
+        </div>
+
+        <!-- Color Controls (for supported models) -->
+        <div id="color-section" class="mb-6 hidden">
+            <div class="text-center text-xs text-gray-400 mb-3">LIGHT COLOR</div>
+            <div class="grid grid-cols-3 gap-2">
+                <button class="remote-button text-orange-400 py-2 px-3 rounded-lg text-xs" data-color="warm">Warm</button>
+                <button class="remote-button text-blue-400 py-2 px-3 rounded-lg text-xs" data-color="cool">Cool</button>
+                <button class="remote-button text-white py-2 px-3 rounded-lg text-xs" data-color="daylight">Day</button>
+            </div>
+        </div>
+
+        <!-- Status -->
+        <div class="mt-6 pt-4 border-t border-gray-700">
+            <div id="status-message" class="text-center text-xs text-gray-400 font-mono">Ready</div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

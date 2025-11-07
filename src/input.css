@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  /* Remote Button Base */
+  .remote-button {
+    @apply text-remote-text font-semibold py-3 px-4 rounded-xl shadow-button transition-all duration-150 ease-in-out border border-gray-600;
+    background: linear-gradient(145deg, #3a3f54, #2d3142);
+    border: 1px solid #4a505e;
+  }
+  
+  .remote-button:hover {
+    background: linear-gradient(145deg, #4a505e, #3a3f54);
+    transform: translateY(-1px);
+  }
+  
+  .remote-button:active {
+    background: linear-gradient(145deg, #2d3142, #3a3f54);
+    transform: translateY(0);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Power Buttons */
+  .power-on {
+    background: linear-gradient(145deg, #10b981, #059669) !important;
+    border-color: #059669 !important;
+  }
+  
+  .power-on:hover {
+    background: linear-gradient(145deg, #059669, #047857) !important;
+  }
+  
+  .power-off {
+    background: linear-gradient(145deg, #ef4444, #dc2626) !important;
+    border-color: #dc2626 !important;
+  }
+  
+  .power-off:hover {
+    background: linear-gradient(145deg, #dc2626, #b91c1c) !important;
+  }
+  
+  /* Speed Dial Container */
+  .speed-dial-container {
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+  }
+  
+  /* Speed Buttons - Professional Remote Style */
+  .speed-button {
+    /* background: linear-gradient(145deg, #374151, #1f2937);
+    border: 2px solid #4b5563; */
+    color: #d1d5db;
+    @apply transition-all duration-300 ease-out;
+    /* box-shadow: 
+      0 4px 8px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2); */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+    font-weight: 700;
+  }
+  
+  .speed-button:hover {
+    /* background: linear-gradient(145deg, #4b5563, #374151); */
+    border-color: #06b6d4;
+    color: #06b6d4;
+    /* transform: translateY(-2px) scale(1.05); */
+    box-shadow: 
+      0 6px 12px rgba(0, 0, 0, 0.4),
+      0 0 20px rgba(6, 182, 212, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  }
+  
+  .speed-button:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 
+      0 2px 4px rgba(0, 0, 0, 0.4),
+      inset 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+  
+  .speed-button.active {
+    /* background: linear-gradient(145deg, #06b6d4, #0891b2); */
+    border-color: #67e8f9;
+    color: #06b6d4;
+    transform: scale(1.1);
+    /* box-shadow: 
+      0 0 25px rgba(6, 182, 212, 0.6),
+      0 4px 8px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3); */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Professional LCD Display Styling */
+  #current-speed {
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.8);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+  }
+  
+  /* LED Indicator */
+  .led-indicator {
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.8);
+    animation: pulse-led 2s infinite;
+  }
+}
+
+/* Custom Animations */
+@keyframes pulse-led {
+  0%, 100% { 
+    opacity: 1; 
+  }
+  50% { 
+    opacity: 0.6; 
+  }
+}
+
+/* Custom Slider Styling */
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #06b6d4;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
+}
+
+.slider::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #06b6d4;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
+}

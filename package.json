@@ -1,0 +1,64 @@
+{
+  "name": "atomberg-remote-controller",
+  "version": "1.0.0",
+  "description": "Electron-based remote controller for Atomberg smart fans using local Wi-Fi commands",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build-css": "npx tailwindcss -i ./src/input.css -o ./style.css --watch",
+    "build-css-once": "npx tailwindcss -i ./src/input.css -o ./style.css",
+    "build-css-prod": "npx tailwindcss -i ./src/input.css -o ./style.css --minify",
+    "build": "npm run build-css-prod && electron-builder",
+    "build-mac": "npm run build-css-prod && electron-builder --mac --arm64 && electron-builder --mac --x64 && electron-builder --mac --universal",
+    "build-win": "npm run build-css-prod && electron-builder --win",
+    "build-linux": "npm run build-css-prod && electron-builder --linux"
+  },
+  "keywords": [
+    "atomberg",
+    "fan",
+    "remote",
+    "controller",
+    "udp",
+    "electron"
+  ],
+  "author": "Ayush Kumar Bhadani",
+  "license": "MIT",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "electron": "^39.1.0",
+    "electron-builder": "^24.13.3",
+    "tailwindcss": "^3.4.0"
+  },
+  "build": {
+    "appId": "com.ayushkumarbhadani.atomberg.remote-controller",
+    "productName": "Atomberg Remote Controller",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "renderer.js",
+      "udp-service.js",
+      "preload.js",
+      "index.html",
+      "style.css",
+      "atomberg.webp",
+      "assets/icon.iconset/atomberg.ico",
+      "assets/icon.iconset/atomberg.png",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "icon": "assets/icon.iconset/atomberg.png"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.iconset/atomberg.ico"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.iconset/atomberg.png"
+    }
+  }
+}
